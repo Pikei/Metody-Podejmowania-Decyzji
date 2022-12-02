@@ -9,6 +9,12 @@ import java.awt.event.WindowEvent;
 import java.util.stream.IntStream;
 
 public class MetodaNajszybszegoSpadku extends Frame implements ActionListener {
+    private final double[] s = new double[4];
+    private final double[] sNew = new double[4];
+    private final double[] g = new double[4];
+    private final double k = 0.6;
+    private TextField x1, x2, x3, x4;
+    private Button calculate;
     public MetodaNajszybszegoSpadku() {
         super("Metoda najszybszego spadku");
         setSize(500, 300);
@@ -40,13 +46,6 @@ public class MetodaNajszybszegoSpadku extends Frame implements ActionListener {
         });
     }
 
-    private final double[] s = new double[4];
-    private final double[] sNew = new double[4];
-    private final double[] g = new double[4];
-    private final double k = 0.6;
-    private TextField x1, x2, x3, x4;
-    private Button calculate;
-
     @Override
     public void actionPerformed(ActionEvent e) {
         String label = e.getActionCommand();
@@ -67,22 +66,20 @@ public class MetodaNajszybszegoSpadku extends Frame implements ActionListener {
     }
 
     public void start() {
-        int count = 1;
-        for(int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1; i++) {
             spadek();
-            for (int j = 0; j < s.length; j++) {
-                double e = 0.2;
-                if (Math.abs(s[j] - sNew[j]) < e) {
-                    count++;
-                } else {
-                    IntStream.range(0, s.length).forEach(x -> s[x] = sNew[x]);
-                    count = 1;
-                    break;
-                }
+            double e = 0.02;
+            if (euklides() < e) {
+                break;
+            } else {
+                IntStream.range(0, s.length).forEach(x -> s[x] = sNew[x]);
             }
-            if (count == s.length) break;
         }
         printInfo();
+    }
+
+    private double euklides() {
+        return (Math.sqrt(Math.pow(sNew[0] - s[0], 2) + Math.pow(sNew[1] - s[1], 2) + Math.pow(sNew[2] - s[2], 2) + Math.pow(sNew[3] - s[3], 2)));
     }
 
     private void printInfo() {
@@ -111,19 +108,19 @@ public class MetodaNajszybszegoSpadku extends Frame implements ActionListener {
     }
 
     private double wielomian(double x1, double x2, double x3, double x4) {
-        return Math.pow(x1, 4) * x2 + Math.pow(x3,3) + Math.pow(x4,2) * x1;
+        return Math.pow(x1, 4) * x2 + Math.pow(x3, 3) + Math.pow(x4, 2) * x1;
     }
 
     private double pochodnaX1(double x1, double x2, double x3, double x4) {
-        return 4 * Math.pow(x1,3) * x2 + Math.pow(x4,2);
+        return 4 * Math.pow(x1, 3) * x2 + Math.pow(x4, 2);
     }
 
     private double pochodnaX2(double x1, double x2, double x3, double x4) {
-        return Math.pow(x1,4);
+        return Math.pow(x1, 4);
     }
 
-    private double pochodnaX3(double x1, double x2, double x3, double x4){
-        return 3 * Math.pow(x3,2);
+    private double pochodnaX3(double x1, double x2, double x3, double x4) {
+        return 3 * Math.pow(x3, 2);
     }
 
     private double pochodnaX4(double x1, double x2, double x3, double x4) {
