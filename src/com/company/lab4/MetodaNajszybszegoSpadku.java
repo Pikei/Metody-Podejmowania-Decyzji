@@ -66,7 +66,7 @@ public class MetodaNajszybszegoSpadku extends Frame implements ActionListener {
     }
 
     public void start() {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1000; i++) {
             spadek();
             double e = 0.02;
             if (euklides() < e) {
