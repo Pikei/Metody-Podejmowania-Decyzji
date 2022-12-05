@@ -16,6 +16,6 @@ public class Wykres extends JComponent {
 
     public void paint(Graphics g)
     {
-        g.drawLine(10,10,10,10);
+        g.drawLine(x1,y1,x2,y2);
     }
 }

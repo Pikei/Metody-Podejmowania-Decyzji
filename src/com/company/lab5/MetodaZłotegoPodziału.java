@@ -103,6 +103,7 @@ public class MetodaZłotegoPodziału extends Frame implements ActionListener {
 
     public double wielomian(double x) {
         return Math.abs(2 * Math.pow(x - 2.5, 3));
+//        return x*x;
     }
 
     private double round(double value) {
