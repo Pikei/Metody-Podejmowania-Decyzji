@@ -4,6 +4,7 @@ import com.company.lab1.MetodaMonteCarlo;
 import com.company.lab2.MenuHJ;
 import com.company.lab3.MetodaSpadkuWzględemWspółrzędnych;
 import com.company.lab4.MetodaNajszybszegoSpadku;
+import com.company.lab5.MetodaZłotegoPodziału;
 
 import java.util.Scanner;
 
@@ -19,6 +20,7 @@ public class Main {
         System.out.println("2. Metoda Hooke'a-Jeevsa");
         System.out.println("3. Metoda spadku względem współrzędnych");
         System.out.println("4. Metoda najszybszego spadku");
+        System.out.println("5. Metoda złotego podziału");
         System.out.print("Twój wybór: ");
         Scanner input = new Scanner(System.in);
         switch (input.nextInt()) {
@@ -29,6 +31,7 @@ public class Main {
             case 2 -> hookeJeeves.menu();
             case 3 -> metodaSpadkuWzględemWspółrzędnych.start();
             case 4 -> new MetodaNajszybszegoSpadku();
+            case 5 -> new MetodaZłotegoPodziału();
         }
     }
 }
