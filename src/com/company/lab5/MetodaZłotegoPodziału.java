@@ -6,15 +6,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 public class MetodaZłotegoPodziału extends Frame implements ActionListener {
-    private double a = -100;
-    private double b = 100;
+    private double a, b;
     private double xl, xr, min;
     private double e = 0.02;
     private double k = (Math.sqrt(5) - 1) / 2;
+    private int[] tabXargs, tabXvals;
     private TextField x1, x2;
-    private Button calculate;
+    private Button calculate, plot;
+    private Label result = new Label("Optymalne wartości: ");
+
 
     public MetodaZłotegoPodziału() {
         super("Metoda najszybszego spadku");
@@ -29,9 +32,21 @@ public class MetodaZłotegoPodziału extends Frame implements ActionListener {
         add(x2);
         x2.setText("100");
 
+        a = Double.parseDouble(x1.getText());
+        b = Double.parseDouble(x2.getText());
+
+        tabXargs = tablicaArgumentów((int)a, (int)b);
+        tabXvals = tablicaWartości((int)a, (int)b);
+
         calculate = new Button("Wyznacz minimum");
         calculate.addActionListener(this);
         add(calculate);
+        add(result);
+
+        plot = new Button("Wykres");
+        plot.addActionListener(this);
+        add(plot);
+
         setVisible(true);
         addWindowListener(new WindowAdapter() {
             @Override
@@ -45,14 +60,23 @@ public class MetodaZłotegoPodziału extends Frame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String label = e.getActionCommand();
-        if (label.equals("Wyznacz minimum")) {
-            try {
-                start();
-            } catch (NumberFormatException ev) {
-                JOptionPane.showMessageDialog(null, "Błędne dane! Wprowadź poprawne współrzędne początkowe.");
-            }
-        } else if (label.equals("Shutdown")) {
-            System.exit(0);
+        switch (label) {
+            case "Wyznacz minimum":
+                try {
+                    start();
+                } catch (NumberFormatException ev) {
+                    JOptionPane.showMessageDialog(null, "Błędne dane! Wprowadź poprawne współrzędne początkowe.");
+                }
+                break;
+            case "Wykres":
+                try {
+                    wykres();
+                } catch (NumberFormatException ev) {
+                    JOptionPane.showMessageDialog(null, "Błędne dane! Wprowadź poprawne współrzędne początkowe.");
+                }
+                break;
+            case "Shutdown":
+                System.exit(0);
         }
     }
 
@@ -73,7 +97,8 @@ public class MetodaZłotegoPodziału extends Frame implements ActionListener {
         } while (b - a > e);
 
         min = round((a + b) / 2);
-        JOptionPane.showMessageDialog(null, min);
+//        JOptionPane.showMessageDialog(null, min);
+        result.setText(result.getText() + min);
     }
 
     public double wielomian(double x) {
@@ -86,5 +111,31 @@ public class MetodaZłotegoPodziału extends Frame implements ActionListener {
         return value;
     }
 
-    // rysowanie grafu jeszcze jest w planach :)
+    private int[] tablicaArgumentów(int a, int b) {
+        ArrayList<Integer> tabTemp = new ArrayList<>();
+        int end = (Math.abs(a)+Math.abs(b));
+        for (int i = 0; i<end; i++) {
+            tabTemp.add(a);
+            a++;
+        }
+        return tabTemp.stream().mapToInt(i -> i).toArray();
+    }
+    private int[] tablicaWartości(int a, int b) {
+        ArrayList<Integer> tabTemp = new ArrayList<>();
+        int end = (Math.abs(a)+Math.abs(b));
+        for (int i = 0; i<end; i++) {
+            tabTemp.add((int) wielomian(tabXargs[i]));
+        }
+        return tabTemp.stream().mapToInt(i -> i).toArray();
+    }
+
+    public void wykres() {
+        JFrame window = new JFrame();
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setBounds(300, 200, 1000, 700);
+        for (int i = 0; i<tabXargs.length; i++) {
+            window.getContentPane().add(new Wykres(tabXargs[i], (int) round(wielomian(tabXargs[i])), tabXargs[i+1],(int) round(wielomian(tabXargs[i+1]))));
+            window.setVisible(true);
+        }
+    }
 }
