@@ -1,28 +1,50 @@
 package com.company.lab6;
 
+import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class NajszybszySpadekZłotyPodział {
 
     private double[] d = new double[3];
-    private double[] x = {4, 8, 4};
-    private double[] xNew = {4, 8, 4};
+    private double[] x = new double[3];
+    private double[] xNew = {1, 1, 1};
     private double krok;
+    private Scanner input = new Scanner(System.in);
 
     public void naszybszySpadek() {
-        do {
-            d[0] = pochodnaX1(xNew[0], xNew[2]);
-            d[1] = pochodnaX2(xNew[0], xNew[2]);
-            d[2] = pochodnaX3();
-            IntStream.range(0, d.length).forEach(i -> d[i] = round(d[i] * -1));
-            krok = złotyPodział();
-            System.arraycopy(xNew, 0, x, 0, x.length);
-        } while (euklides() >= 0.02);
-        IntStream.range(0, x.length).forEach(i -> x[i] = xNew[i]);
-        System.out.println(wielomian(x[0], x[1], x[2]));
+//        int count = 1;
+        System.out.println("Podaj ilość iteracji: ");
+        int range = input.nextInt();
 
-        for (int i = 0; i < xNew.length; i++) {
-            System.out.println(xNew[i]);
+        do {
+            for (int j = 1; j <= range; j++) {
+                System.arraycopy(xNew, 0, x, 0, x.length);
+                d[0] = round(pochodnaX1(xNew[0], xNew[2]));
+                d[1] = round(pochodnaX2(xNew[0], xNew[2]));
+                d[2] = pochodnaX3();
+                IntStream.range(0, d.length).forEach(i -> d[i] = d[i] * -1);
+                krok = złotyPodział();
+                IntStream.range(0, xNew.length).forEach(i -> xNew[i] = round(xNew[i] + d[i] * krok));
+                if ((euklides() < 0.02) || j == range) {
+                    print();
+                    return;
+                }
+            }
+//            for (int i = 0; i < x.length; i++) {
+//                if(Math.abs(Math.abs(x[i])-Math.abs(xNew[i])) < 0.02) {
+//                    count++;
+//                } else count = 1;
+//            }
+//            if (count == x.length) break;
+        } while (euklides() > 0.02);
+
+
+    }
+
+    private void print() {
+        System.out.println("Funkcja wynosi: " + round(wielomian(xNew[0], xNew[1], xNew[2])) + "\nOptymalne współrzędne dla punktów to: ");
+        for (double v : xNew) {
+            System.out.println(v);
         }
     }
 
@@ -35,9 +57,8 @@ public class NajszybszySpadekZłotyPodział {
         double xl = b - k * (b - a);
         double xr = a + k * (b - a);
 
-        for (double v : d) {
             do {
-                if (wielomianDlaZłotegoPodziału(xl, k, v) < wielomianDlaZłotegoPodziału(xr, k, v)) {
+                if (wielomianDlaZłotegoPodziału(xl) < wielomianDlaZłotegoPodziału(xr)) {
                     b = xr;
                     xr = xl;
                     xl = b - k * (b - a);
@@ -48,12 +69,11 @@ public class NajszybszySpadekZłotyPodział {
                 }
             }
             while (b - a > e);
-        }
         return round((a + b) / 2);
     }
 
-    private double wielomianDlaZłotegoPodziału(double x, double k, double d) {
-        return x + k * d;
+    private double wielomianDlaZłotegoPodziału(double k) {
+        return Math.pow((x[0] + k * d[0]), 3) * Math.sin(x[1] + k * d[1] + 4 * (x[2] + k * d[2]));
     }
 
     private double wielomian(double x1, double x2, double x3) {
@@ -73,13 +93,13 @@ public class NajszybszySpadekZłotyPodział {
     }
 
     private double round(double value) {
-        double temp = Math.round(value * 1000);
-        value = (temp / 1000);
+        double temp = Math.round(value * 100000);
+        value = (temp / 100000);
         return value;
     }
 
     private double euklides() {
-        return (Math.sqrt(Math.pow(xNew[0] - x[0], 2) + Math.pow(xNew[1] - x[1], 2) + Math.pow(xNew[2] - x[2], 2)));
+        return round(Math.sqrt(Math.pow(xNew[0] - x[0], 2) + Math.pow(xNew[1] - x[1], 2) + Math.pow(xNew[2] - x[2], 2)));
     }
 
 
