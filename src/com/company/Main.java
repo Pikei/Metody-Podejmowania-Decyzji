@@ -5,7 +5,7 @@ import com.company.lab2.MenuHJ;
 import com.company.lab3.MetodaSpadkuWzględemWspółrzędnych;
 import com.company.lab4.MetodaNajszybszegoSpadku;
 import com.company.lab5.MetodaZłotegoPodziału;
-import com.company.lab5.Wykres;
+import com.company.lab6.NajszybszySpadekZłotyPodział;
 
 import java.util.Scanner;
 
@@ -22,6 +22,7 @@ public class Main {
         System.out.println("3. Metoda spadku względem współrzędnych");
         System.out.println("4. Metoda najszybszego spadku");
         System.out.println("5. Metoda złotego podziału");
+        System.out.println("6. Nie działa :(");
         System.out.print("Twój wybór: ");
         Scanner input = new Scanner(System.in);
         switch (input.nextInt()) {
@@ -33,42 +34,10 @@ public class Main {
             case 3 -> metodaSpadkuWzględemWspółrzędnych.start();
             case 4 -> new MetodaNajszybszegoSpadku();
             case 5 -> new MetodaZłotegoPodziału();
-//            case 0 -> new Wykres();
+            case 6 -> {
+                NajszybszySpadekZłotyPodział nszp = new NajszybszySpadekZłotyPodział();
+                nszp.naszybszySpadek();
+            }
         }
     }
 }
-
-//
-//import java.awt.*;
-//import javax.swing.*;
-//import java.awt.geom.Line2D;
-//import java.util.Random;
-//
-//class MyCanvas extends JComponent {
-//int x,y;
-//    public MyCanvas(int x, int y) {
-//        this.x = x;
-//        this.y = y;
-//    }
-//
-//    public void paint(Graphics g)
-//    {
-//        g.drawLine(x, 0, x, y);
-//        g.drawLine(y,34,21,420);
-//    }
-//}
-//
-//public class Main {
-//    public static void main(String[] a)
-//    {
-//        Random rand = new Random();
-//        JFrame window = new JFrame();
-//        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        window.setBounds(300, 200, 1000, 700);
-////        window.getContentPane().add(new MyCanvas(22, 1));
-////        window.setVisible(true);
-//        window.getContentPane().add(new MyCanvas(220, 10));
-//
-//        window.setVisible(true);
-//    }
-//}
