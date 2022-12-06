@@ -22,7 +22,7 @@ public class Main {
         System.out.println("3. Metoda spadku względem współrzędnych");
         System.out.println("4. Metoda najszybszego spadku");
         System.out.println("5. Metoda złotego podziału");
-        System.out.println("6. Nie działa :(");
+        System.out.println("6. Metoda najszybszego spadku z optymalizacją kroku metodą złotego podziału");
         System.out.print("Twój wybór: ");
         Scanner input = new Scanner(System.in);
         switch (input.nextInt()) {
