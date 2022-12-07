@@ -5,11 +5,11 @@ import java.util.stream.IntStream;
 
 public class NajszybszySpadekZłotyPodział {
 
+    private final Scanner input = new Scanner(System.in);
     private double[] d = new double[3];
     private double[] x = new double[3];
     private double[] xNew = {1, 1, 1};
     private double krok;
-    private Scanner input = new Scanner(System.in);
 
     public void naszybszySpadek() {
 //        int count = 1;
@@ -17,15 +17,16 @@ public class NajszybszySpadekZłotyPodział {
         int range = input.nextInt();
 
         do {
-            for (int j = 1; j <= range; j++) {
-                System.arraycopy(xNew, 0, x, 0, x.length);
-                d[0] = round(pochodnaX1(xNew[0], xNew[2]));
-                d[1] = round(pochodnaX2(xNew[0], xNew[2]));
-                d[2] = pochodnaX3();
-                IntStream.range(0, d.length).forEach(i -> d[i] = d[i] * -1);
-                krok = złotyPodział();
-                IntStream.range(0, xNew.length).forEach(i -> xNew[i] = round(xNew[i] + d[i] * krok));
-                if ((euklides() < 0.02) || j == range) {
+            for (int j = 0; j < range; j++) {
+            System.arraycopy(xNew, 0, x, 0, x.length);
+//            System.out.println("wartość funkcji przed optymalizacją: " + wielomian(xNew[0], xNew[1], xNew[2]));
+            d[0] = round(pochodnaX1(xNew[0], xNew[1]));
+            d[1] = round(pochodnaX2(xNew[0], xNew[1]));
+            d[2] = pochodnaX3();
+            IntStream.range(0, d.length).forEach(i -> d[i] = d[i] * -1);
+            krok = złotyPodział();
+            IntStream.range(0, xNew.length).forEach(i -> xNew[i] = round(x[i] + (d[i] * krok)));
+                if ((euklides() < 0.02) || j == range-1) {
                     print();
                     return;
                 }
@@ -37,8 +38,7 @@ public class NajszybszySpadekZłotyPodział {
 //            }
 //            if (count == x.length) break;
         } while (euklides() > 0.02);
-
-
+        print();
     }
 
     private void print() {
@@ -48,7 +48,6 @@ public class NajszybszySpadekZłotyPodział {
         }
     }
 
-
     private double złotyPodział() {
         double a = -10;
         double b = 10;
@@ -57,23 +56,24 @@ public class NajszybszySpadekZłotyPodział {
         double xl = b - k * (b - a);
         double xr = a + k * (b - a);
 
-            do {
-                if (wielomianDlaZłotegoPodziału(xl) < wielomianDlaZłotegoPodziału(xr)) {
-                    b = xr;
-                    xr = xl;
-                    xl = b - k * (b - a);
-                } else {
-                    a = xl;
-                    xl = xr;
-                    xr = a + k * (b - a);
-                }
+        do {
+            if (wielomianDlaZłotegoPodziału(xl) < wielomianDlaZłotegoPodziału(xr)) {
+                b = xr;
+                xr = xl;
+                xl = b - k * (b - a);
+            } else {
+                a = xl;
+                xl = xr;
+                xr = a + k * (b - a);
             }
-            while (b - a > e);
+        }
+        while (b - a > e);
         return round((a + b) / 2);
     }
 
     private double wielomianDlaZłotegoPodziału(double k) {
-        return Math.pow((x[0] + k * d[0]), 3) * Math.sin(x[1] + k * d[1] + 4 * (x[2] + k * d[2]));
+        double v = Math.pow((xNew[0] + k * d[0]), 3) * Math.sin(xNew[1] + k * d[1] + 4 * (xNew[2] + k * d[2]));
+        return v;
     }
 
     private double wielomian(double x1, double x2, double x3) {
@@ -101,28 +101,4 @@ public class NajszybszySpadekZłotyPodział {
     private double euklides() {
         return round(Math.sqrt(Math.pow(xNew[0] - x[0], 2) + Math.pow(xNew[1] - x[1], 2) + Math.pow(xNew[2] - x[2], 2)));
     }
-
-
-
-//    public void start() {
-//        xl = b - k * (b - a);
-//        xr = a + k * (b - a);
-//
-//        do {
-//            if (wielomian(xl) < wielomian(xr)) {
-//                b = xr;
-//                xr = xl;
-//                xl = b - k * (b - a);
-//            } else {
-//                a = xl;
-//                xl = xr;
-//                xr = a + k * (b - a);
-//            }
-//        } while (b - a > e);
-//
-//        min = round((a + b) / 2);
-//        JOptionPane.showMessageDialog(null, min);
-//        result.setText(result.getText() + min);
-//    }
-
 }
