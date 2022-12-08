@@ -10,6 +10,10 @@ public class MetodaMonteCarlo {
     private int x2;
     private int x3;
 
+    public MetodaMonteCarlo() {
+        menu();
+    }
+
     public void menu() {
         System.out.println("Enter range of numbers.");
         System.out.print("Range from: ");

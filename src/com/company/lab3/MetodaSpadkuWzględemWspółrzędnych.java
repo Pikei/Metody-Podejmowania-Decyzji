@@ -7,6 +7,11 @@ public class MetodaSpadkuWzględemWspółrzędnych {
     private double[] x;
     private double f1, f2;
     private double temp;
+    private double k = 0.25;
+
+    public MetodaSpadkuWzględemWspółrzędnych() {
+        start();
+    }
 
     public void start() {
         setX(new double[5]);
@@ -15,6 +20,7 @@ public class MetodaSpadkuWzględemWspółrzędnych {
         Arrays.fill(x0, 1);
         int lim = 0;
         while (lim != x.length) {
+//            System.out.println("wielomian " + wielomian(x[0], x[1], x[2], x[3], x[4]));
             lim = krok();
         }
         wypiszX();
@@ -24,7 +30,7 @@ public class MetodaSpadkuWzględemWspółrzędnych {
         int lim = 0;
         for (int i = 0; i < x.length; i++) {
             temp = x[i];
-            if(!(sprawdzenie(i, temp, 1)) && !(sprawdzenie(i, temp, -1))) {
+            if(!(sprawdzenie(i, temp, k)) && !(sprawdzenie(i, temp, -k))) {
                 x[i] = temp;
                 lim ++;
             }

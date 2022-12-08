@@ -5,39 +5,26 @@ import java.util.stream.IntStream;
 
 public class NajszybszySpadekZłotyPodział {
 
-    private final Scanner input = new Scanner(System.in);
     private double[] d = new double[3];
     private double[] x = new double[3];
     private double[] xNew = {1, 1, 1};
     private double krok;
 
-    public void naszybszySpadek() {
-//        int count = 1;
-        System.out.println("Podaj ilość iteracji: ");
-        int range = input.nextInt();
+    public NajszybszySpadekZłotyPodział() {
+        naszybszySpadek();
+    }
 
-        do {
-            for (int j = 0; j < range; j++) {
+    public void naszybszySpadek() {
+        for (int j = 0; j < 1000; j++) {
             System.arraycopy(xNew, 0, x, 0, x.length);
-//            System.out.println("wartość funkcji przed optymalizacją: " + wielomian(xNew[0], xNew[1], xNew[2]));
             d[0] = round(pochodnaX1(xNew[0], xNew[1]));
             d[1] = round(pochodnaX2(xNew[0], xNew[1]));
             d[2] = pochodnaX3();
             IntStream.range(0, d.length).forEach(i -> d[i] = d[i] * -1);
             krok = złotyPodział();
             IntStream.range(0, xNew.length).forEach(i -> xNew[i] = round(x[i] + (d[i] * krok)));
-                if ((euklides() < 0.02) || j == range-1) {
-                    print();
-                    return;
-                }
-            }
-//            for (int i = 0; i < x.length; i++) {
-//                if(Math.abs(Math.abs(x[i])-Math.abs(xNew[i])) < 0.02) {
-//                    count++;
-//                } else count = 1;
-//            }
-//            if (count == x.length) break;
-        } while (euklides() > 0.02);
+            if ((euklides() < 0.02)) break;
+        }
         print();
     }
 
@@ -72,8 +59,7 @@ public class NajszybszySpadekZłotyPodział {
     }
 
     private double wielomianDlaZłotegoPodziału(double k) {
-        double v = Math.pow((xNew[0] + k * d[0]), 3) * Math.sin(xNew[1] + k * d[1] + 4 * (xNew[2] + k * d[2]));
-        return v;
+        return Math.pow((xNew[0] + k * d[0]), 3) * Math.sin(xNew[1] + k * d[1] + 4 * (xNew[2] + k * d[2]));
     }
 
     private double wielomian(double x1, double x2, double x3) {

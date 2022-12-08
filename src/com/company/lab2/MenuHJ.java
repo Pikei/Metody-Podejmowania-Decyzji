@@ -4,6 +4,11 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class MenuHJ {
+
+    public MenuHJ() {
+        menu();
+    }
+
     public void menu() {
         Scanner input = new Scanner(System.in);
         System.out.println("Wprowadź ile przejść chcesz wykonać: ");
