@@ -7,6 +7,7 @@ import com.company.lab4.MetodaNajszybszegoSpadku;
 import com.company.lab5.MetodaZłotegoPodziału;
 import com.company.lab6.NajszybszySpadekZłotyPodział;
 import com.company.lab7.MetodaSteffensona;
+import com.company.lab8.AlgorytmGenetyczny;
 
 import java.util.Scanner;
 
@@ -39,6 +40,7 @@ public class Main {
             case 5 -> new MetodaZłotegoPodziału();
             case 6 -> new NajszybszySpadekZłotyPodział();
             case 7 -> new MetodaSteffensona();
+            case 8 -> new AlgorytmGenetyczny();
         }
     }
 }

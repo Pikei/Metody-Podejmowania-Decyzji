@@ -134,8 +134,7 @@ public class MetodaSteffensona extends Frame implements ActionListener {
 
     private double round(double value) {
         double temp = (int) (value * 1000000000);
-        value = (temp / 1000000000);
-        return value;
+        return (temp / 1000000000);
     }
 
     /*
