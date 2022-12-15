@@ -6,6 +6,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 public class AlgorytmGenetyczny {
+    //    ArrayList<Rodzice> rodzice1 =new ArrayList<>();
+//    HashMap<Integer, ArrayList<>> populacja2 = new HashMap<>(100);
     private final HashMap<Integer, double[]> populacja = new HashMap<>(100);
     private final ArrayList<double[]> rodzice = new ArrayList<>(50);
     private final double[] ocena = new double[100];
@@ -20,30 +22,25 @@ public class AlgorytmGenetyczny {
 
     private void start() {
 //        printPopulation();
-        for (int x = 0; x < 2; x++) {
 
-            for (int i = 0; i < 3; i++) {
-                battleRoyal[i] = rand.nextInt(100);
-            }
-            Arrays.sort(battleRoyal);
-            for (int j : battleRoyal) {
-                printChallengers(j);
-            }
-            System.out.println(findNewParent(battleRoyal));
-            rodzice.add(populacja.get(findNewParent(battleRoyal)));
+//        for (int i = 0; i < 100; i++) {
+
+        for (int j = 0; j < 2; j++) {
+
+            vDolce();
+
+            addNewParent();
+
+        }
             System.out.println();
+            printParents();
             System.out.println();
-//        for (int i = 0; i < rodzice.size(); i++) {
-//            rodzice.add(populacja.get(findNewParent(battleRoyal)));
+            if (lotto() <= 0.4) {
+                tenTego(0, 1);
+                System.out.println();
+                printParents();
+            }
 //        }
-
-        }
-        System.out.println();
-        System.out.println();
-        for (int i = 0; i < rodzice.size(); i++) {
-            System.out.println(Arrays.toString(rodzice.get(i)));
-        }
-
     }
 
     private void createPopulation() {
@@ -55,40 +52,23 @@ public class AlgorytmGenetyczny {
         }
     }
 
-    private int findNewParent(int []indeksRodzica) {
-        double max = ocena[indeksRodzica[0]];
-        int index = indeksRodzica[0];
-        for (int i = 0; i < 3; i++) {
-            if(ocena[indeksRodzica[i]] > max) {
-                max = ocena[indeksRodzica[i]];
-                index = indeksRodzica[i];
-            }
+    private void vDolce() {
+        IntStream.range(0, 3).forEach(i -> battleRoyal[i] = rand.nextInt(100));
+        Arrays.sort(battleRoyal);
+        for (int j : battleRoyal) {
+            printChallengers(j);
         }
-        return index;
-//
-//
-//        double []temp = new double[3];
-//        temp[0] = ocena[indeksRodzica[0]];
-//        temp[1] = ocena[indeksRodzica[1]];
-//        temp[2] = ocena[indeksRodzica[2]];
-//
-//        for (int i = 0; i < temp.length; i++) {
-//            if (max < temp[i]) {
-//                max = temp[i];
-//            }
-//        }
-//
-//
-//
-//
-//        for (int j : battleRoyal) {
-//            if (ocena[j] > max) {
-//                max = ocena[j];
-//                indeksRodzica = j;
-//            }
-//
-//        }
-//        return indeksRodzica;
+    }
+
+    private void addNewParent() {
+        double max = findNewParent();
+        IntStream.range(0, battleRoyal.length).filter(i -> ocena[battleRoyal[i]] == max).findFirst().ifPresent(i -> index = battleRoyal[i]);
+        rodzice.add(populacja.get(index));
+    }
+
+    private double findNewParent() {
+        double[] temp = {ocena[battleRoyal[0]], ocena[battleRoyal[1]], ocena[battleRoyal[2]]};
+        return Arrays.stream(temp).max().getAsDouble();
     }
 
     private void printPopulation() {
@@ -109,6 +89,10 @@ public class AlgorytmGenetyczny {
         System.out.println("] ocena: " + ocena[index]);
     }
 
+    private void printParents() {
+        rodzice.stream().map(Arrays::toString).forEach(System.out::println);
+    }
+
 
     private double[] generateRandom(double min, double max) {
         double[] temp = new double[4];
@@ -119,5 +103,23 @@ public class AlgorytmGenetyczny {
     private double func(double[] x) {
         return ((Math.sin(x[0]) * Math.cos(x[1])) / (Math.pow(x[2], 2) * Math.pow(x[3], 2) + 1)) * -1;
     }
+
+    private double lotto() {
+        return rand.nextDouble(1);
+    }
+
+    private void tenTego(int index1, int index2) {
+        double[] temp1 = {rodzice.get(index1)[0], rodzice.get(index1)[1], rodzice.get(index2)[2], rodzice.get(index2)[3]};
+        double[] temp2 = {rodzice.get(index2)[0], rodzice.get(index2)[1], rodzice.get(index1)[2], rodzice.get(index1)[3]};
+
+        rodzice.retainAll(rodzice);
+        rodzice.add(index1, temp1);
+        rodzice.add(index2, temp2);
+    }
+
+    private void mutate() {
+
+    }
+
 
 }
