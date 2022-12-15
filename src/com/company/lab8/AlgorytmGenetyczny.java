@@ -9,37 +9,49 @@ public class AlgorytmGenetyczny {
     //    ArrayList<Rodzice> rodzice1 =new ArrayList<>();
 //    HashMap<Integer, ArrayList<>> populacja2 = new HashMap<>(100);
     private final HashMap<Integer, double[]> populacja = new HashMap<>(100);
-    private final ArrayList<double[]> rodzice = new ArrayList<>(50);
+    private final HashMap<Integer, double[]> rodzice = new HashMap<>(100);
     private final double[] ocena = new double[100];
     private final int[] battleRoyal = new int[3];
+    private double[] monkey;
     private final Random rand = new Random();
     int index;
 
     public AlgorytmGenetyczny() {
         createPopulation();
+        monkey = populacja.get(małpyRazemSilne());
+        System.out.println(Arrays.toString(monkey));
+        if (func(monkey) <= 1.2 && func(monkey) >= 0.8) {
+            System.out.println(Arrays.toString(monkey));
+            return;
+        }
         start();
     }
 
     private void start() {
 //        printPopulation();
 
-//        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
 
-        for (int j = 0; j < 2; j++) {
+//        for (int j = 0; j < 2; j++) {
+
 
             vDolce();
 
-            addNewParent();
-
+            addNewParent(i);
         }
-            System.out.println();
-            printParents();
-            System.out.println();
+//
+//            System.out.println();
+//            printParents();
+//            System.out.println();
+        for (int i = 0; i < 100; i += 2) {
             if (lotto() <= 0.4) {
-                tenTego(0, 1);
-                System.out.println();
-                printParents();
+                tenTego(i, i + 1);
             }
+        }
+//                System.out.println();
+
+
+        printParents();
 //        }
     }
 
@@ -55,15 +67,15 @@ public class AlgorytmGenetyczny {
     private void vDolce() {
         IntStream.range(0, 3).forEach(i -> battleRoyal[i] = rand.nextInt(100));
         Arrays.sort(battleRoyal);
-        for (int j : battleRoyal) {
-            printChallengers(j);
-        }
+//        for (int j : battleRoyal) {
+//            printChallengers(j);
+//        }
     }
 
-    private void addNewParent() {
+    private void addNewParent(int indexOfParent) {
         double max = findNewParent();
         IntStream.range(0, battleRoyal.length).filter(i -> ocena[battleRoyal[i]] == max).findFirst().ifPresent(i -> index = battleRoyal[i]);
-        rodzice.add(populacja.get(index));
+        rodzice.put(indexOfParent, populacja.get(index));
     }
 
     private double findNewParent() {
@@ -90,7 +102,14 @@ public class AlgorytmGenetyczny {
     }
 
     private void printParents() {
-        rodzice.stream().map(Arrays::toString).forEach(System.out::println);
+        for (int i = 0; i < rodzice.size(); i++) {
+//            for (int j=0; j<rodzice.get(j).length; j++){
+            System.out.println("index: " + i + " tab: " + Arrays.toString(rodzice.get(i)));
+
+        }
+//        System.out.println();
+//        rodzice.values().forEach(System.out::println);
+//        rodzice.stream().map(Arrays::toString).forEach(System.out::println);
     }
 
 
@@ -111,15 +130,18 @@ public class AlgorytmGenetyczny {
     private void tenTego(int index1, int index2) {
         double[] temp1 = {rodzice.get(index1)[0], rodzice.get(index1)[1], rodzice.get(index2)[2], rodzice.get(index2)[3]};
         double[] temp2 = {rodzice.get(index2)[0], rodzice.get(index2)[1], rodzice.get(index1)[2], rodzice.get(index1)[3]};
-
-        rodzice.retainAll(rodzice);
-        rodzice.add(index1, temp1);
-        rodzice.add(index2, temp2);
+        rodzice.remove(index1);
+        rodzice.remove(index2);
+        rodzice.put(index1, temp1);
+        rodzice.put(index2, temp2);
     }
 
     private void mutate() {
 
     }
 
-
+    private int małpyRazemSilne() {
+        double max = Arrays.stream(ocena).max().getAsDouble();
+        return IntStream.range(0, ocena.length).filter(i -> ocena[i] == max).findFirst().orElse(-1);
+    }
 }
