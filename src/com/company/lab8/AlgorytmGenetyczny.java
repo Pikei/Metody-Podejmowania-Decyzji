@@ -6,20 +6,18 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 public class AlgorytmGenetyczny {
-    //    ArrayList<Rodzice> rodzice1 =new ArrayList<>();
-//    HashMap<Integer, ArrayList<>> populacja2 = new HashMap<>(100);
     private final HashMap<Integer, double[]> populacja = new HashMap<>(100);
     private final HashMap<Integer, double[]> rodzice = new HashMap<>(100);
     private final double[] ocena = new double[100];
     private final int[] battleRoyal = new int[3];
-    private double[] monkey;
     private final Random rand = new Random();
     int index;
+    private final double[] monkey;
+    private double[] monkey2;
 
     public AlgorytmGenetyczny() {
         createPopulation();
-        monkey = populacja.get(małpyRazemSilne());
-        System.out.println(Arrays.toString(monkey));
+        monkey = populacja.get(tabIndex(ocena));
         if (func(monkey) <= 1.2 && func(monkey) >= 0.8) {
             System.out.println(Arrays.toString(monkey));
             return;
@@ -29,30 +27,35 @@ public class AlgorytmGenetyczny {
 
     private void start() {
 //        printPopulation();
-
-        for (int i = 0; i < 100; i++) {
-
-//        for (int j = 0; j < 2; j++) {
-
-
-            vDolce();
-
-            addNewParent(i);
-        }
-//
-//            System.out.println();
-//            printParents();
-//            System.out.println();
-        for (int i = 0; i < 100; i += 2) {
-            if (lotto() <= 0.4) {
-                tenTego(i, i + 1);
+        for (int x = 0; x < 100; x++) {
+            for (int i = 0; i < 100; i++) {
+                vDolce();
+                addNewParent(i);
             }
+            for (int i = 0; i < 100; i += 2) {
+                if (lotto() <= 0.4) {
+                    tenTego(i, i + 1);
+                }
+            }
+            IntStream.range(0, 100).filter(i -> lotto() <= 0.02).forEachOrdered(i -> {
+                mutate(i);
+                ocena[i] = func(rodzice.get(i));
+            });
+            populacja.putAll(rodzice);
+            monkey2 = populacja.get(tabIndex(ocena));
+
+            if (func(monkey2) < func(monkey)) {
+                populacja.put(getKey(), monkey);
+            }
+            if (func(monkey) <= 1.2 && func(monkey) >= 0.8) {
+                System.out.println(Arrays.toString(monkey));
+                return;
+            }
+            printParents();
         }
-//                System.out.println();
+        System.out.println(Arrays.toString(monkey));
+        System.out.println(func(monkey));
 
-
-        printParents();
-//        }
     }
 
     private void createPopulation() {
@@ -102,14 +105,7 @@ public class AlgorytmGenetyczny {
     }
 
     private void printParents() {
-        for (int i = 0; i < rodzice.size(); i++) {
-//            for (int j=0; j<rodzice.get(j).length; j++){
-            System.out.println("index: " + i + " tab: " + Arrays.toString(rodzice.get(i)));
-
-        }
-//        System.out.println();
-//        rodzice.values().forEach(System.out::println);
-//        rodzice.stream().map(Arrays::toString).forEach(System.out::println);
+        IntStream.range(0, rodzice.size()).mapToObj(i -> "index: " + i + " tab: " + Arrays.toString(rodzice.get(i))).forEach(System.out::println);
     }
 
 
@@ -136,12 +132,18 @@ public class AlgorytmGenetyczny {
         rodzice.put(index2, temp2);
     }
 
-    private void mutate() {
-
+    private void mutate(int index) {
+        for (int i = 0; i < populacja.get(index).length; i++) {
+            populacja.get(index)[i] = populacja.get(index)[i] + (Math.random() * (0.02 - (-0.02)) + (-0.02));
+        }
     }
 
-    private int małpyRazemSilne() {
-        double max = Arrays.stream(ocena).max().getAsDouble();
-        return IntStream.range(0, ocena.length).filter(i -> ocena[i] == max).findFirst().orElse(-1);
+    private int tabIndex(double[] x) {
+        double max = Arrays.stream(x).max().getAsDouble();
+        return IntStream.range(0, x.length).filter(i -> x[i] == max).findFirst().orElse(-1);
+    }
+
+    private int getKey() {
+        return IntStream.range(0, 100).filter(i -> populacja.get(i) == monkey2).findFirst().orElse(-1);
     }
 }
