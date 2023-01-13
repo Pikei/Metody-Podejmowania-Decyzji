@@ -1,23 +1,24 @@
 package com.company.lab9;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 public class Pso {
 
-    private HashMap<Integer, Particle> swarm = new HashMap<>();
-    private Random rand = new Random();
-
+    private final HashMap<Integer, Particle> swarm = new HashMap<>();
+    private final Random rand = new Random();
 
     public Pso() {
         createSwarm();
+        IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setGlobalBest(findGlobalBest()));
+        IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setV(velocity(i)));
+        moveParticle();
+//            swarm.values().stream().forEach(System.out::println);
     }
 
     private void createSwarm() {
-        double x,y;
+        double x, y;
         double[] personalBest = new double[2];
         double[] globalBest = new double[2];
         double[] v = new double[2];
@@ -28,15 +29,10 @@ public class Pso {
             personalBest[1] = y;
             globalBest[0] = 1;
             globalBest[1] = 1;
-            v[0] = randomize(-1,1);
-            v[1] = randomize(-1,1);
-            swarm.put(i,new Particle(func(x,y), x,y, personalBest, globalBest, v));
+            v[0] = randomize(-1, 1);
+            v[1] = randomize(-1, 1);
+            swarm.put(i, new Particle(func(x, y), x, y, personalBest, globalBest, v));
         }
-        updateGlobalBest();
-
-
-
-        swarm.values().stream().forEach(System.out::println);
     }
 
     private double[] findGlobalBest() {
@@ -44,7 +40,7 @@ public class Pso {
         double max = swarm.get(0).getRating();
         double[] best = new double[2];
         for (int i = 0; i < size; i++) {
-            if(swarm.get(i).getRating() > max) {
+            if (swarm.get(i).getRating() > max) {
                 max = swarm.get(i).getRating();
                 best[0] = swarm.get(i).getX();
                 best[1] = swarm.get(i).getY();
@@ -53,10 +49,54 @@ public class Pso {
         return best;
     }
 
+    private void moveParticle() {
+        updatePosition();
+        updatePersonalBest();
+        updateGlobalBest();
+    }
+
+    private void updatePosition() {
+        IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setX(swarm.get(i).getX() + swarm.get(i).getV()[0]));
+        IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setY(swarm.get(i).getX() + swarm.get(i).getV()[1]));
+        IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setRating(func(swarm.get(i).getX(), swarm.get(i).getY())));
+    }
+
+    private void updatePersonalBest() {
+        IntStream.range(0, swarm.size()).filter(i -> func(swarm.get(i).getPersonalBest()[0], swarm.get(i).getPersonalBest()[1]) > swarm.get(i).getRating()).forEach(i -> {
+            double[] temp = new double[2];
+            temp[0] = swarm.get(i).getX();
+            temp[1] = swarm.get(i).getY();
+            swarm.get(i).setPersonalBest(temp);
+        });
+    }
+
     private void updateGlobalBest() {
         for (int i = 0; i < swarm.size(); i++) {
-            swarm.get(i).setGlobalBest(findGlobalBest());
+            if (func(swarm.get(i).getGlobalBest()[0], swarm.get(i).getGlobalBest()[1]) > func(swarm.get(i).getPersonalBest()[0], swarm.get(i).getPersonalBest()[1])) {
+                for (int j = 0; j < swarm.size(); j++) {
+                    swarm.get(j).setGlobalBest(swarm.get(i).getPersonalBest());
+                }
+            }
         }
+    }
+
+    private double[] velocity(int i) {
+        double[] v = new double[2];
+        v[0] = xVelocity(i);
+        v[1] = yVelocity(i);
+        return v;
+    }
+
+    private double xVelocity(int i) {
+        return (0.8 * swarm.get(i).getV()[0]) +
+                (0.2 * Math.random() * (swarm.get(i).getPersonalBest()[0] - swarm.get(i).getX())) +
+                (0.2 * Math.random() * (swarm.get(i).getGlobalBest()[0] - swarm.get(i).getX()));
+    }
+
+    private double yVelocity(int i) {
+        return (0.8 * swarm.get(i).getV()[0]) +
+                (0.2 * Math.random() * (swarm.get(i).getPersonalBest()[1] - swarm.get(i).getY())) +
+                (0.2 * Math.random() * (swarm.get(i).getGlobalBest()[1] - swarm.get(i).getY()));
     }
 
     private double randomize(double min, double max) {
@@ -64,10 +104,7 @@ public class Pso {
     }
 
     private double func(double x, double y) {
-        return Math.pow(x - 3.14, 2) + Math.pow(y - 2.72, 2) + Math.sin(3*x + 1.41) + Math.sin((4*y - 1.76));
+        return Math.pow(x - 3.14, 2) + Math.pow(y - 2.72, 2) + Math.sin(3 * x + 1.41) + Math.sin((4 * y - 1.76));
     }
 
-//    private double[] vector() {
-//
-//    }
 }
