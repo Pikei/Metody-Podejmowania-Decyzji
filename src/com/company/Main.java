@@ -28,6 +28,8 @@ public class Main {
         System.out.println("5. Metoda złotego podziału");
         System.out.println("6. Metoda najszybszego spadku z optymalizacją kroku metodą złotego podziału");
         System.out.println("7. Metoda najszybszego spadku z optymalizacją kroku metodą steffensona");
+        System.out.println("8. Algorytm genetyczny");
+        System.out.println("9. Algorytm PSO");
         System.out.print("Twój wybór: ");
     }
 

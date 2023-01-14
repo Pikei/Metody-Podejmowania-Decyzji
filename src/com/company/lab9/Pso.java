@@ -11,26 +11,44 @@ public class Pso {
 
     public Pso() {
         createSwarm();
-        IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setGlobalBest(findGlobalBest()));
-        IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setV(velocity(i)));
-        moveParticle();
-//            swarm.values().stream().forEach(System.out::println);
+//        print();
+//        System.out.println("====================================================");
+        for (int x = 0; x < 100000; x++) {
+
+
+            IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setGlobalBest(findGlobalBest()));
+            IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setV(velocity(i)));
+//        print();
+//        System.out.println("====================================================");
+            moveParticle();
+        }
+        print();
+//        System.out.println("====================================================");
+    }
+
+    private void print() {
+        IntStream.range(0, swarm.size()).forEach(i -> {
+            System.out.println("---------------------------");
+            System.out.println("Particle: " + (i+1));
+            System.out.println("X: " + swarm.get(i).getX());
+            System.out.println("Y: " + swarm.get(i).getY());
+            System.out.println("Grade: " + swarm.get(i).getRating());
+            System.out.println("V: [" + swarm.get(i).getV()[0] + ", " + swarm.get(i).getV()[1] + "]");
+            System.out.println("Personal best: [" + swarm.get(i).getPersonalBest()[0] + ", " + swarm.get(i).getPersonalBest()[1] + "]");
+            System.out.println("Global best: [" + swarm.get(i).getGlobalBest()[0] + ", " + swarm.get(i).getGlobalBest()[1] + "]");
+            System.out.println("---------------------------");
+        });
     }
 
     private void createSwarm() {
         double x, y;
-        double[] personalBest = new double[2];
-        double[] globalBest = new double[2];
-        double[] v = new double[2];
+
         for (int i = 0; i < 20; i++) {
             x = randomize(-100, 100);
             y = randomize(-100, 100);
-            personalBest[0] = x;
-            personalBest[1] = y;
-            globalBest[0] = 1;
-            globalBest[1] = 1;
-            v[0] = randomize(-1, 1);
-            v[1] = randomize(-1, 1);
+            double[] personalBest = {x, y};
+            double[] globalBest = {1, 1};
+            double[] v = {randomize(-1, 1), randomize(-1, 1)};
             swarm.put(i, new Particle(func(x, y), x, y, personalBest, globalBest, v));
         }
     }
@@ -40,7 +58,7 @@ public class Pso {
         double max = swarm.get(0).getRating();
         double[] best = new double[2];
         for (int i = 0; i < size; i++) {
-            if (swarm.get(i).getRating() > max) {
+            if (swarm.get(i).getRating() < max) {
                 max = swarm.get(i).getRating();
                 best[0] = swarm.get(i).getX();
                 best[1] = swarm.get(i).getY();
@@ -57,7 +75,7 @@ public class Pso {
 
     private void updatePosition() {
         IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setX(swarm.get(i).getX() + swarm.get(i).getV()[0]));
-        IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setY(swarm.get(i).getX() + swarm.get(i).getV()[1]));
+        IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setY(swarm.get(i).getY() + swarm.get(i).getV()[1]));
         IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setRating(func(swarm.get(i).getX(), swarm.get(i).getY())));
     }
 

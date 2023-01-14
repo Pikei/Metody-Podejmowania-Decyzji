@@ -1,6 +1,6 @@
 package com.company.lab9;
 
-public class Particle extends Pso{
+public class Particle {
     private double rating;
     private double x, y;
     private double[] personalBest;
