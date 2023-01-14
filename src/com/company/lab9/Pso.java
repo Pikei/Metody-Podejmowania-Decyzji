@@ -11,19 +11,12 @@ public class Pso {
 
     public Pso() {
         createSwarm();
-//        print();
-//        System.out.println("====================================================");
-        for (int x = 0; x < 100000; x++) {
-
-
+        do {
             IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setGlobalBest(findGlobalBest()));
             IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setV(velocity(i)));
-//        print();
-//        System.out.println("====================================================");
             moveParticle();
-        }
+        } while(!exit());
         print();
-//        System.out.println("====================================================");
     }
 
     private void print() {
@@ -42,8 +35,7 @@ public class Pso {
 
     private void createSwarm() {
         double x, y;
-
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 50; i++) {
             x = randomize(-100, 100);
             y = randomize(-100, 100);
             double[] personalBest = {x, y};
@@ -117,6 +109,18 @@ public class Pso {
                 (0.2 * Math.random() * (swarm.get(i).getGlobalBest()[1] - swarm.get(i).getY()));
     }
 
+    private boolean exit() {
+        int counter = 0;
+        for (int i = 0; i < swarm.size(); i++) {
+            if (Math.abs(swarm.get(i).getX() - swarm.get(i).getGlobalBest()[0]) < 0.02 && Math.abs(swarm.get(i).getY() - swarm.get(i).getGlobalBest()[1]) < 0.02) {
+                counter ++;
+            } else {
+                counter --;
+            }
+        }
+        return counter == swarm.size();
+    }
+
     private double randomize(double min, double max) {
         return rand.nextDouble() * (max - min) + min;
     }
@@ -124,5 +128,4 @@ public class Pso {
     private double func(double x, double y) {
         return Math.pow(x - 3.14, 2) + Math.pow(y - 2.72, 2) + Math.sin(3 * x + 1.41) + Math.sin((4 * y - 1.76));
     }
-
 }
