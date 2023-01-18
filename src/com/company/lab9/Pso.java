@@ -11,8 +11,8 @@ public class Pso {
 
     public Pso() {
         createSwarm();
+        IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setGlobalBest(findGlobalBest()));
         do {
-            IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setGlobalBest(findGlobalBest()));
             IntStream.range(0, swarm.size()).forEach(i -> swarm.get(i).setV(velocity(i)));
             moveParticle();
         } while(!exit());
@@ -104,7 +104,7 @@ public class Pso {
     }
 
     private double yVelocity(int i) {
-        return (0.8 * swarm.get(i).getV()[0]) +
+        return (0.8 * swarm.get(i).getV()[1]) +
                 (0.2 * Math.random() * (swarm.get(i).getPersonalBest()[1] - swarm.get(i).getY())) +
                 (0.2 * Math.random() * (swarm.get(i).getGlobalBest()[1] - swarm.get(i).getY()));
     }
@@ -126,6 +126,6 @@ public class Pso {
     }
 
     private double func(double x, double y) {
-        return Math.pow(x - 3.14, 2) + Math.pow(y - 2.72, 2) + Math.sin(3 * x + 1.41) + Math.sin((4 * y - 1.76));
+        return Math.pow(x - 3.14, 2) + Math.pow(y - 2.72, 2) + Math.sin(3 * x + 1.41) + Math.sin((4 * y - 1.73));
     }
 }
