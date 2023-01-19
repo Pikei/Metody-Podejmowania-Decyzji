@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.lab1.MetodaMonteCarlo;
+import com.company.lab10.DifferentialEvolution;
 import com.company.lab2.MenuHJ;
 import com.company.lab3.MetodaSpadkuWzględemWspółrzędnych;
 import com.company.lab4.MetodaNajszybszegoSpadku;
@@ -30,6 +31,7 @@ public class Main {
         System.out.println("7. Metoda najszybszego spadku z optymalizacją kroku metodą steffensona");
         System.out.println("8. Algorytm genetyczny");
         System.out.println("9. Algorytm PSO");
+        System.out.println("10. Algorytm różnicowy");
         System.out.print("Twój wybór: ");
     }
 
@@ -45,6 +47,7 @@ public class Main {
             case 7 -> new MetodaSteffensona();
             case 8 -> new AlgorytmGenetyczny();
             case 9 -> new Pso();
+            case 10 -> new DifferentialEvolution(100);
         }
     }
 }

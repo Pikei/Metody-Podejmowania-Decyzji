@@ -29,6 +29,7 @@ public class Pso {
             System.out.println("V: [" + swarm.get(i).getV()[0] + ", " + swarm.get(i).getV()[1] + "]");
             System.out.println("Personal best: [" + swarm.get(i).getPersonalBest()[0] + ", " + swarm.get(i).getPersonalBest()[1] + "]");
             System.out.println("Global best: [" + swarm.get(i).getGlobalBest()[0] + ", " + swarm.get(i).getGlobalBest()[1] + "]");
+            System.out.println("Global best grade: " + func(swarm.get(i).getGlobalBest()[0], swarm.get(i).getGlobalBest()[0]));
             System.out.println("---------------------------");
         });
     }
