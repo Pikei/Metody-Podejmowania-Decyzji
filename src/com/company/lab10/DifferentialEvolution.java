@@ -34,6 +34,16 @@ public class DifferentialEvolution {
         best = Arrays.stream(challengers).min().getAsDouble();
         } while (genotype.get(index).getGrade() == best);
 
+        double bestScore = best;
+        IntStream.range(0,genotype.size()).filter(i -> genotype.get(i).getGrade() == bestScore).findFirst();
+
+
+        for (int i = 0; i < genotype.size(); i++) {
+            if (best == genotype.get(i).getGrade()) {
+                double x = genotype.get(i).getX();
+            }
+        }
+
 //        int x = genotype.get();
 //
 //        for (int i = 0; i < genotype.size(); i++) {

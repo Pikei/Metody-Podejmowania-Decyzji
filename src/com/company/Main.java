@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.egzamin.Test;
 import com.company.lab1.MetodaMonteCarlo;
 import com.company.lab10.DifferentialEvolution;
 import com.company.lab2.MenuHJ;
@@ -32,12 +33,14 @@ public class Main {
         System.out.println("8. Algorytm genetyczny");
         System.out.println("9. Algorytm PSO");
         System.out.println("10. Algorytm różnicowy");
+        System.out.println("0. TEST");
         System.out.print("Twój wybór: ");
     }
 
     private static void menuChoice() {
         Scanner input = new Scanner(System.in);
         switch (input.nextInt()) {
+            case 0 -> new Test();
             case 1 -> new MetodaMonteCarlo();
             case 2 -> new MenuHJ();
             case 3 -> new MetodaSpadkuWzględemWspółrzędnych();
