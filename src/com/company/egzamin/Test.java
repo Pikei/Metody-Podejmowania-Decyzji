@@ -4,15 +4,13 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class Test {
-//    steffensen, sigma n100 (n+1)*x^(n-1)
 
-    private final double[]x = new double[100];
     private final double[]g = new double[100];
     public Test() {
         algortym();
     }
 
-    private double funkcja(){
+    private double funkcja(double[] x){
         /*
         double result = 0;
         for (int i = 0; i < x.length; i++) {
@@ -23,7 +21,7 @@ public class Test {
         return IntStream.range(0, x.length).mapToDouble(i -> (i + 1) * Math.pow(x[i], i - 1)).sum();
     }
 
-    private double pochodna(){
+    private double pochodna(double[] x){
         return IntStream.range(0, x.length).mapToDouble(i -> ((i + 1)*(i - 1)) * Math.pow(x[i], (i - 1)-1)).sum();
     }
 
@@ -33,15 +31,15 @@ public class Test {
 //    }
 
     private void algortym(){
-
+        double[]x = new double[100];
         double k = 1;
         Arrays.fill(x,1);
-        System.out.println("wartość funkcji wynosi: " + funkcja());
+        System.out.println("wartość funkcji wynosi: " + funkcja(x));
         Arrays.setAll(g, i -> ((i + 1) * (i - 1)) * Math.pow(x[i], (i - 1) - 1));
+//        Arrays.stream(g).forEach(System.out::println);
+        double[] temp = new double[100];
+        Arrays.setAll(temp, i-> x[i]+(k*g[i]));
+        Arrays.stream(temp).forEach(System.out::println);
 
-//        System.out.println("pochodna funkcji wynosi: " + pochodna());
-
-//        gradient();
-        Arrays.stream(g).forEach(System.out::println);
     }
 }
