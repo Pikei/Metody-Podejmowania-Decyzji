@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.egzamin.Gauss;
 import com.company.egzamin.Test;
 import com.company.lab1.MetodaMonteCarlo;
 import com.company.lab10.DifferentialEvolution;
@@ -40,7 +41,8 @@ public class Main {
     private static void menuChoice() {
         Scanner input = new Scanner(System.in);
         switch (input.nextInt()) {
-            case 0 -> new Test();
+//            case 0 -> new Test();
+            case 0 -> new Gauss();
             case 1 -> new MetodaMonteCarlo();
             case 2 -> new MenuHJ();
             case 3 -> new MetodaSpadkuWzględemWspółrzędnych();
